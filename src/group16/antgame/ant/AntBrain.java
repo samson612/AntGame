@@ -14,6 +14,7 @@ import java.io.File;
 import java.io.FileNotFoundException;
 import java.io.FileReader;
 import java.io.IOException;
+import java.io.LineNumberReader;
 import java.util.ArrayList;
 
 /**
@@ -24,7 +25,7 @@ public class AntBrain {
     
     ArrayList<Instruction> states;
     int numStates;
-    int currentLineNo;
+    LineNumberReader lnr;
     
     /**
      * Creates a new AntBrain from a File object.
@@ -35,15 +36,17 @@ public class AntBrain {
      */
     public AntBrain(File finiteStateMachine) throws FileNotFoundException, IOException, UndefinedStateException, UnsupportedSenseDirectionException, UnsupportedConditionException, NotEnoughParametersException, MarkerOutOfBoundsException, InvalidIntegerException, UnsupportedLinearDirectionException {
         states = new ArrayList<Instruction>();
-        BufferedReader br = new BufferedReader(new FileReader(finiteStateMachine));
-        String currentLine = br.readLine();
-        numStates = (int) br.lines().count();
-        currentLineNo = 1;
+        numStates = numOfLines(finiteStateMachine);
+        lnr = new LineNumberReader(new FileReader(finiteStateMachine));
+        String currentLine = lnr.readLine();
         while(currentLine != null) {
             parseLine(currentLine);
-            currentLine = br.readLine();
-            currentLineNo++;
+            currentLine = lnr.readLine();
         }
+    }
+    
+    public ArrayList<Instruction> getStates() {
+        return states;
     }
     
     private String parseLine(String unparsed) throws UndefinedStateException, UnsupportedSenseDirectionException, UnsupportedConditionException, NotEnoughParametersException, MarkerOutOfBoundsException, InvalidIntegerException, UnsupportedLinearDirectionException {
@@ -81,7 +84,7 @@ public class AntBrain {
             parseFlip(toDoNext);
         }
         else {
-            throw new UndefinedStateException(currentLineNo);
+            throw new UndefinedStateException(lnr.getLineNumber());
         }
         
         return toDoNext;
@@ -98,7 +101,7 @@ public class AntBrain {
             states.add(instruction);
         }
         else {
-            throw new NotEnoughParametersException(currentLineNo);
+            throw new NotEnoughParametersException(lnr.getLineNumber());
         }
     }
     
@@ -111,7 +114,7 @@ public class AntBrain {
             states.add(instruction);
         }
         else {
-            throw new NotEnoughParametersException(currentLineNo);
+            throw new NotEnoughParametersException(lnr.getLineNumber());
         }
     }
     
@@ -124,7 +127,7 @@ public class AntBrain {
             states.add(instruction);
         }
         else {
-            throw new NotEnoughParametersException(currentLineNo);
+            throw new NotEnoughParametersException(lnr.getLineNumber());
         }
     }
     
@@ -137,7 +140,7 @@ public class AntBrain {
             states.add(instruction);
         }
         else {
-            throw new NotEnoughParametersException(currentLineNo);
+            throw new NotEnoughParametersException(lnr.getLineNumber());
         }
     }
     
@@ -149,7 +152,7 @@ public class AntBrain {
             states.add(instruction);
         }
         else {
-            throw new NotEnoughParametersException(currentLineNo);
+            throw new NotEnoughParametersException(lnr.getLineNumber());
         }
     }
     
@@ -162,7 +165,7 @@ public class AntBrain {
             states.add(instruction);
         }
         else {
-            throw new NotEnoughParametersException(currentLineNo);
+            throw new NotEnoughParametersException(lnr.getLineNumber());
         }
     }
     
@@ -175,7 +178,7 @@ public class AntBrain {
             states.add(instruction);
         }
         else {
-            throw new NotEnoughParametersException(currentLineNo);
+            throw new NotEnoughParametersException(lnr.getLineNumber());
         }
     }
     
@@ -189,7 +192,7 @@ public class AntBrain {
             states.add(instruction);
         }
         else {
-            throw new NotEnoughParametersException(currentLineNo);
+            throw new NotEnoughParametersException(lnr.getLineNumber());
         }
     }
     
@@ -199,7 +202,7 @@ public class AntBrain {
             case "Ahead": return SenseDirection.Ahead;
             case "LeftAhead": return SenseDirection.LeftAhead;
             case "RightAhead": return SenseDirection.RightAhead;
-            default: throw new UnsupportedSenseDirectionException(currentLineNo);
+            default: throw new UnsupportedSenseDirectionException(lnr.getLineNumber());
         }
     }
     
@@ -215,7 +218,7 @@ public class AntBrain {
             case "FoeMarker": return Condition.FoeMarker;
             case "Home": return Condition.Home;
             case "FoeHome": return Condition.FoeHome;
-            default: throw new UnsupportedConditionException(currentLineNo);
+            default: throw new UnsupportedConditionException(lnr.getLineNumber());
         }
     }
     
@@ -225,7 +228,7 @@ public class AntBrain {
             return state;
         }
         else {
-            throw new UndefinedStateException(currentLineNo);
+            throw new UndefinedStateException(lnr.getLineNumber());
         }
     }
     
@@ -235,7 +238,7 @@ public class AntBrain {
             return marker;
         }
         else {
-            throw new MarkerOutOfBoundsException(currentLineNo);
+            throw new MarkerOutOfBoundsException(lnr.getLineNumber());
         }
     }
 
@@ -243,7 +246,7 @@ public class AntBrain {
         switch(unparsed) {
             case "Left": return LinearDirection.Left;
             case "Right": return LinearDirection.Right;
-            default: throw new UnsupportedLinearDirectionException(currentLineNo);
+            default: throw new UnsupportedLinearDirectionException(lnr.getLineNumber());
         }
     }
     
@@ -251,8 +254,17 @@ public class AntBrain {
         try {
             return Integer.parseInt(unparsed);
         } catch(Exception e) {
-            throw new InvalidIntegerException(currentLineNo);
+            throw new InvalidIntegerException(lnr.getLineNumber());
         }
+    }
+    
+    private int numOfLines(File f) throws FileNotFoundException, IOException {
+        LineNumberReader reader = new LineNumberReader(new FileReader(f));
+        String currLine = reader.readLine();
+        while(currLine != null) {
+            currLine = reader.readLine();
+        }
+        return reader.getLineNumber();
     }
     
 }

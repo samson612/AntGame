@@ -43,5 +43,13 @@ public class Unmark extends Instruction {
         // Unmark marker in current cell and go to st.
         throw new UnsupportedOperationException("Not supported yet."); //To change body of generated methods, choose Tools | Templates.
     }
+
+    public int getMarker() {
+        return marker;
+    }
+
+    public int getSt() {
+        return st;
+    }
     
 }

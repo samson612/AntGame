@@ -38,5 +38,13 @@ public class Turn extends Instruction {
     public int execute() {
         throw new UnsupportedOperationException("Not supported yet."); //To change body of generated methods, choose Tools | Templates.
     }
+
+    public LinearDirection getDir() {
+        return dir;
+    }
+
+    public int getSt() {
+        return st;
+    }
     
 }

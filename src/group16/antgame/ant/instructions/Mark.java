@@ -41,5 +41,14 @@ public class Mark extends Instruction {
         // Set mark marker in current cell and go to st.
         throw new UnsupportedOperationException("Not supported yet.");
     }
+
+    public int getMarker() {
+        return marker;
+    }
+
+    public int getSt() {
+        return st;
+    }
+    
     
 }
