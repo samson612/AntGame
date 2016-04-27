@@ -46,6 +46,7 @@ public class Move extends Instruction {
             // move forward
             aheadCell.setAnt(a);
             c.clearAnt();
+            a.setResting(a.getResting() + 14);
             return st1;
         }
     }

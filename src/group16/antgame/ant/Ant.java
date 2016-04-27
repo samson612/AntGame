@@ -77,7 +77,7 @@ public class Ant {
     }
     
     
-    public Instruction getInstruction() {
+    public Instruction getCurrentInstruction() {
         return brain.states.get(currentState);
     }
     
@@ -143,11 +143,5 @@ public class Ant {
      */
     public void setHasFood(boolean hasFood) {
         this.hasFood = hasFood;
-    }
-    
-    public void step(World w, Position p, Cell c) {
-        if(resting == 0) {
-            currentState = brain.getStates().get(currentState).execute(w, p, c, this);
-        }
     }
 }
