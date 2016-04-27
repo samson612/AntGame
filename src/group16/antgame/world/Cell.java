@@ -3,7 +3,10 @@ package group16.antgame.world;
 import group16.antgame.ant.Ant;
 import group16.antgame.ant.Colour;
 import group16.antgame.ant.Condition;
+import group16.antgame.ant.Direction;
+import group16.antgame.ant.LinearDirection;
 import group16.antgame.ant.SenseDirection;
+import group16.antgame.ant.InvalidDirectionException;
 
 /**
  * The Cell class is used to model a single part of the World. This class provides methods to distinguish what is held on each cell.
@@ -33,48 +36,35 @@ public class Cell {
     public static final char BLACK_ANTHILL = '-';
     
     /**
+     * Char to store the  cell specifiers
+     */
+    private char specifier;
+    
+    /**
+     * Int to store the number of food at this cell
+     */
+    private int numOfFood;
+    
+    private boolean[] Red_Marker;
+    
+    private boolean[] Black_Marker;
+    /**
+     * Position to store the position of this cell
+     */
+    private Position pos;
+    
+    private Ant antAtThisCell;
+    /**
      * Instantiate a new Cell with a specifier (Rocky, Clear, Anthill etc.)
      * @param specifier The char specifier for the new cell.
-     */
-    public Cell(char specifier) {
-        throw new UnsupportedOperationException("Need to implement this!");
-    }
-    
-    /**
-     * Generate a regular cell with the specified number of food particles.
      * @param numOfFood 
      */
-    public Cell(int numOfFood) {
-        throw new UnsupportedOperationException("Need to implement this!");
-    }
-
-    /**
-     * Checks whether the condition holds true in the current cell.
-     * @param condition The condition that is to be checked.
-     * @param colour The colour of the ant that is checking the condition.
-     * @return True if the condition holds true, false otherwise.
-     */
-    public boolean matches(Condition condition, Colour colour) {
-        throw new UnsupportedOperationException("Need to implement this!");
-    }
     
-    /**
-     * Returns the adjacent cell in the specified direction.
-     * @param direction The direction to get the adjacent cell from.
-     * @return The adjacent cell in the direction specified.
-     */
-    public Cell adjacentCell(int direction) {
-        throw new UnsupportedOperationException("Need to implement this!");
-    }
-    
-    /**
-     * Returns the cell that an ant can sense given the direction it is facing and the sense direction it has.
-     * @param direction The direction the ant is facing.
-     * @param senseDir The sense direction the ant is paying attention to.
-     * @return The cell an ant can sense given the direction it is facing and the sense direction. 
-     */
-    public Cell sensedCell(int direction, SenseDirection senseDir) {
-        throw new UnsupportedOperationException("Need to implement this!");
+    public Cell(char specifier,int numOfFood){
+        this.specifier = specifier;
+        this.numOfFood = numOfFood;
+        this.Red_Marker = new boolean[] {false,false,false,false,false,false};
+        this.Black_Marker = new boolean[]{false,false,false,false,false,false};
     }
     
     /**
@@ -82,7 +72,7 @@ public class Cell {
      * @return True if the current cell is rocky, false otherwise.
      */
     public boolean isRocky() {
-        throw new UnsupportedOperationException("Need to implement this!");
+        return (specifier == ROCKY);
     }
     
     
@@ -91,7 +81,7 @@ public class Cell {
      * @return True if there is an ant in the cell, false otherwise.
      */
     public boolean occupiesAnt() {
-        throw new UnsupportedOperationException("Need to implement this!");
+        return !(antAtThisCell == null);
     }
     
     /**
@@ -99,15 +89,15 @@ public class Cell {
      * @return The ant that is in the current cell.
      */
     public Ant occupyingAnt() {
-        throw new UnsupportedOperationException("Need to implement this!");
+        return antAtThisCell;
     }
     
     /**
      * Returns the number of food particles in the current cell.
      * @return The number of food particles in the current cell.
      */
-    public int numOfFood() {
-        throw new UnsupportedOperationException("Need to implement this!");
+    public int getNumOfFood() {
+        return numOfFood;
     }
     
     /**
@@ -116,29 +106,33 @@ public class Cell {
      * @return True if there is an anthill of colour c in the current cell, false otherwise.
      */
     public boolean isAnthill(Colour c) {
-        throw new UnsupportedOperationException("Need to implement this!");
+        switch(c){
+            case Red:  return (specifier == RED_ANTHILL);
+            case Black: return (specifier == BLACK_ANTHILL);
+            default: throw new RuntimeException("Undefined Colour");
+        }       
     }
     
     /**
      * Places an Ant in the current cell.
-     * @param a The Ant to be placed in the current cell.
+     * @param ant The Ant to be placed in the current cell.
      */
-    public void setAnt(Ant a) {
-        throw new UnsupportedOperationException("Need to implement this!");
+    public void setAnt(Ant ant) {
+        this.antAtThisCell = ant;
     }
     
     /**
      * Clears the Ant in the current cell.
      */
     public void clearAnt() {
-        throw new UnsupportedOperationException("Need to implement this!");
+        this.antAtThisCell =null;
     }
     
     /**
-     * Kills the Ant in the current cell, turning it into food.
+     * Kills the Ant in the current cell
      */
     public void killAnt() {
-        throw new UnsupportedOperationException("Need to implement this!");
+        clearAnt();
     }
     
     /**
@@ -146,30 +140,55 @@ public class Cell {
      * @param food The desired number of food particles to go in the current cell.
      */
     public void setFood(int food) {
-        throw new UnsupportedOperationException("Need to implement this!");
+        this.numOfFood = food;
+    }
+    
+    public Colour other_color(Colour c)
+    {
+        if(c == Colour.Red)
+            return Colour.Black;
+        else
+            return Colour.Red;
     }
 
-    /**
-     * Finds the number of ants of a certain colour that are adjacent to the current cell.
-     * @param c The colour of ants to count.
-     * @return The number of ants of colour c that are adjacent to the current cell.
-     */
-    public int adjacentAnts(Colour c) {
-        throw new UnsupportedOperationException("Need to implement this!");
+    public void set_marker(Colour c, int Marker)
+    {
+        if(c == Colour.Red)
+            this.Red_Marker[Marker] = true;
+        else 
+            this.Black_Marker[Marker] = true;
     }
     
-    /**
-     * Checks if there is an ant at position p that is surrounded. If there is a surrounded ant there, then it dies and turns into food.
-     */
-    public void checkForSurroundedAnt() {
-        throw new UnsupportedOperationException("Need to implement this!");
+    public void clear_marker(Colour c, int Marker)
+    {
+        if(c == Colour.Red)
+            this.Red_Marker[Marker] = false;
+        else 
+            this.Black_Marker[Marker] = false;
     }
     
-    /**
-     * Checks for surrounded ants in the current cell and all adjacent cells, and kills them if they exist.
-     */
-    public void checkForSurroundedAnts() {
-        throw new UnsupportedOperationException("Need to implement this!");
+    public boolean check_marker(Colour c, int Marker)
+    {
+        if(c == Colour.Red)
+            return Red_Marker[Marker];
+        else 
+            return Black_Marker[Marker];
     }
     
+    public boolean check_any_marker(Colour c)
+    {
+        if(c == Colour.Red)
+        {
+            for(int i = 0; i<6; i++)
+                if (Red_Marker[i])
+                    return true;
+        }
+        else 
+        {
+            for(int i = 0; i<6; i++)
+                if (Black_Marker[i])
+                    return true;
+        }
+            return false;
+    }
 }
