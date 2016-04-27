@@ -60,6 +60,10 @@ public class Ant {
         this.resting = 0;
         currId++;
     }
+
+    public int getId() {
+        return id;
+    }
     
     /**
      * Get the current state of the Ant.
@@ -67,6 +71,11 @@ public class Ant {
      */
     public int getState() {
         return currentState;
+    }
+    
+    
+    public Instruction getInstruction() {
+        return brain.states.get(currentState);
     }
     
     /**
