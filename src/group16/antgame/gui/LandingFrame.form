@@ -47,7 +47,7 @@
               <EmptySpace max="-2" attributes="0"/>
               <Component id="jLabel2" min="-2" max="-2" attributes="0"/>
               <EmptySpace max="-2" attributes="0"/>
-              <Component id="jScrollPane1" pref="419" max="32767" attributes="0"/>
+              <Component id="jScrollPane1" pref="355" max="32767" attributes="0"/>
               <EmptySpace max="-2" attributes="0"/>
               <Group type="103" groupAlignment="3" attributes="0">
                   <Component id="jButton3" alignment="3" min="-2" max="-2" attributes="0"/>
@@ -61,8 +61,11 @@
   <SubComponents>
     <Component class="javax.swing.JButton" name="jButton3">
       <Properties>
-        <Property name="text" type="java.lang.String" value="Add New Player +"/>
+        <Property name="text" type="java.lang.String" value="Add New Player..."/>
       </Properties>
+      <Events>
+        <EventHandler event="actionPerformed" listener="java.awt.event.ActionListener" parameters="java.awt.event.ActionEvent" handler="jButton3ActionPerformed"/>
+      </Events>
     </Component>
     <Component class="javax.swing.JLabel" name="jLabel1">
       <Properties>
@@ -77,6 +80,9 @@
       <Properties>
         <Property name="text" type="java.lang.String" value="Start Game"/>
       </Properties>
+      <Events>
+        <EventHandler event="actionPerformed" listener="java.awt.event.ActionListener" parameters="java.awt.event.ActionEvent" handler="jButton8ActionPerformed"/>
+      </Events>
     </Component>
     <Component class="javax.swing.JLabel" name="jLabel2">
       <Properties>
@@ -92,47 +98,8 @@
 
           <Layout class="org.netbeans.modules.form.compat2.layouts.DesignGridLayout">
             <Property name="columns" type="int" value="2"/>
-            <Property name="rows" type="int" value="3"/>
+            <Property name="rows" type="int" value="0"/>
           </Layout>
-          <SubComponents>
-            <Component class="javax.swing.JLabel" name="jLabel3">
-              <Properties>
-                <Property name="horizontalAlignment" type="int" value="0"/>
-                <Property name="text" type="java.lang.String" value="Player 1"/>
-              </Properties>
-            </Component>
-            <Component class="javax.swing.JButton" name="jButton9">
-              <Properties>
-                <Property name="text" type="java.lang.String" value="Upload Ant Brain..."/>
-              </Properties>
-            </Component>
-            <Component class="javax.swing.JLabel" name="jLabel4">
-              <Properties>
-                <Property name="horizontalAlignment" type="int" value="0"/>
-                <Property name="text" type="java.lang.String" value="Player 2"/>
-              </Properties>
-            </Component>
-            <Component class="javax.swing.JButton" name="jButton10">
-              <Properties>
-                <Property name="text" type="java.lang.String" value="Upload Ant Brain..."/>
-              </Properties>
-            </Component>
-            <Container class="javax.swing.JPanel" name="jPanel3">
-
-              <Layout>
-                <DimensionLayout dim="0">
-                  <Group type="103" groupAlignment="0" attributes="0">
-                      <EmptySpace min="0" pref="293" max="32767" attributes="0"/>
-                  </Group>
-                </DimensionLayout>
-                <DimensionLayout dim="1">
-                  <Group type="103" groupAlignment="0" attributes="0">
-                      <EmptySpace min="0" pref="139" max="32767" attributes="0"/>
-                  </Group>
-                </DimensionLayout>
-              </Layout>
-            </Container>
-          </SubComponents>
         </Container>
       </SubComponents>
     </Container>
