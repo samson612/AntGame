@@ -49,6 +49,7 @@ public class LandingFrame extends javax.swing.JFrame {
         jPanel2 = new javax.swing.JPanel();
 
         setDefaultCloseOperation(javax.swing.WindowConstants.EXIT_ON_CLOSE);
+        setTitle("Ant Game");
 
         jButton3.setText("Add New Player...");
         jButton3.addActionListener(new java.awt.event.ActionListener() {
@@ -61,7 +62,7 @@ public class LandingFrame extends javax.swing.JFrame {
         jLabel1.setHorizontalAlignment(javax.swing.SwingConstants.CENTER);
         jLabel1.setText("Ant Game");
 
-        jButton8.setText("Start Game");
+        jButton8.setText("Create World...");
         jButton8.addActionListener(new java.awt.event.ActionListener() {
             public void actionPerformed(java.awt.event.ActionEvent evt) {
                 jButton8ActionPerformed(evt);
@@ -87,7 +88,7 @@ public class LandingFrame extends javax.swing.JFrame {
                     .addGroup(layout.createSequentialGroup()
                         .addComponent(jButton3)
                         .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED, javax.swing.GroupLayout.DEFAULT_SIZE, Short.MAX_VALUE)
-                        .addComponent(jButton8, javax.swing.GroupLayout.PREFERRED_SIZE, 119, javax.swing.GroupLayout.PREFERRED_SIZE)))
+                        .addComponent(jButton8, javax.swing.GroupLayout.PREFERRED_SIZE, 147, javax.swing.GroupLayout.PREFERRED_SIZE)))
                 .addContainerGap())
         );
         layout.setVerticalGroup(
@@ -169,7 +170,9 @@ public class LandingFrame extends javax.swing.JFrame {
     
     private void addRow() {
         numPlayers++;
-        jPanel2.add(new JLabel("Player "+numPlayers));
+        JLabel label = new JLabel("Player "+numPlayers);
+        label.setHorizontalAlignment(JLabel.CENTER);
+        jPanel2.add(label);
         jPanel2.add(new AntBrainUploadButton(numPlayers));
     }
     
