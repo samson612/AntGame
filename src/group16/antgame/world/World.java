@@ -21,8 +21,8 @@ public class World {
      * The cells 2 dimensional array holds all of the cells of the World.
      */
     private Cell[][] cells;
-    private static final int MAX_X = 150;
-    private static final int MAX_Y = 150;
+    private static int MAX_X = 150;
+    private static int MAX_Y = 150;
     private static final int ANTHILL_LENGTH = 7;
     private static final int BLOB_N = 11;
     private static final int BLOB_X = 5;
@@ -33,9 +33,28 @@ public class World {
      * Creates a new World given a Finite State Machine passed in by the user. This FSM determines the size of the world and the contents of each cell.
      * @param world The Finite State Machine that determines the World.
      */
-    public World(String world) {
+    public World(String world)
+    {
+        String[] cellSpecifiers = world.split("\n");
+        MAX_X = Integer.parseInt(cellSpecifiers[0]);
+        MAX_Y = Integer.parseInt(cellSpecifiers[1]);
+        cells = new Cell[MAX_X][MAX_Y];
+        
+        for(int y = 2; y < MAX_Y + 2; y++)
+        {
+            for(int x = 0; x < MAX_X; x++)
+            {
+                if(Character.getNumericValue(cellSpecifiers[y].charAt((x*2) + y%2)) == -1)
+                    cells[x][y-2] = new Cell(cellSpecifiers[y].charAt((x*2) + y%2),0);
+                else
+                    cells[x][y-2] = new Cell('.',Character.getNumericValue(cellSpecifiers[y].charAt((x*2) + y%2)));
+            }
+        }
+    }
+    public World(AntBrain RedAntBrain, AntBrain BlackAntBrain) throws InvalidDirectionException{
         Random randX = new Random();
         Random randY = new Random(16);
+        cells = new Cell[MAX_X][MAX_Y];
         
         //create Rocky cells on world's perimeter
         for(int i = 0; i < MAX_X; i++)
@@ -79,11 +98,12 @@ public class World {
         //create 11 blobs of food with 5x5 rectangle
         int blob_X;
         int blob_Y;      
+        ArrayList<Position> listOfPosition;
         for(int blob = 0; blob < BLOB_N; blob++)
         {
-            ArrayList<Position> listOfPosition = new ArrayList<>();
             do{
-                overlap = false;         
+                overlap = false;      
+                listOfPosition = new ArrayList<>();
                 blob_X = randX.nextInt(MAX_X - BLOB_X - 3) + 2;
                 blob_Y = randY.nextInt(MAX_Y - BLOB_Y - 3) + 2;
                 for(int x = 0; x < BLOB_X; x++)
@@ -100,26 +120,35 @@ public class World {
         //create 14 rocky cells
         int rock_X;
         int rock_Y;
+        Position rockP;
+        Cell[] AdCell;
         for(int rock = 0; rock < ROCK; rock++)
         {
             do{
                 overlap = false;
                 rock_X = randX.nextInt(MAX_X - 4) + 2;
                 rock_Y = randY.nextInt(MAX_Y - 4) + 2;
-                if(cells[rock_X][rock_Y].isRocky() || cells[rock_X][rock_Y].isAnthill(Colour.Red) || cells[rock_X][rock_Y].isAnthill(Colour.Black) || cells[rock_X][rock_Y].getNumOfFood() > 0)
-                    overlap = true;
+                rockP = new Position(rock_X,rock_Y);
+                AdCell = new Cell[7];
+                for(int d = 0; d < 6; d++)
+                    AdCell[d] = getCellAt(adjacentCell(rockP,d));
+                AdCell[6] = getCellAt(rockP);
+                for(int i = 0; i < 7; i++)
+                    if(AdCell[i].isRocky() || AdCell[i].isAnthill(Colour.Red) || AdCell[i].isAnthill(Colour.Black) || AdCell[i].getNumOfFood() > 0)
+                        overlap = true;
             }while(overlap);
             cells[rock_X][rock_Y] = new Cell('#',0);
         }
         
         //assign ants to it's Anhill
+        
         for(int y = 0; y < MAX_Y; y++)
             for(int x = 0; x < MAX_X; x++)
             {
                 if(cells[x][y].isAnthill(Colour.Red))
-                    cells[x][y].setAnt(new Ant(Colour.Red, RedAntBrain));
+                    cells[x][y].setAnt(new Ant(RedAntBrain, Colour.Red));
                 else if(cells[x][y].isAnthill(Colour.Black))
-                    cells[x][y].setAnt(new Ant(Colour.Black, BlackAntBrain));
+                    cells[x][y].setAnt(new Ant(BlackAntBrain, Colour.Black));
             }
             
     }
@@ -179,10 +208,7 @@ public class World {
             if(a.getResting() > 0)
                 a.setResting(a.getResting() - 1);
             else
-                switch(a.get_instruction(a.getColour(),a.getState()))
-                {
-                    case Sense()
-                }
+                a.getCurrentInstruction.execute(this,p,getCellAt(p), a);
         }
     }
     
@@ -226,7 +252,7 @@ public class World {
      * Returns the adjacent cell in the specified direction.
      * @param pos The position to get the adjacent cell from.
      * @param direction The direction to get the adjacent cell from.
-     * @return The adjacent cell's position in the direction specified.
+     * @return The adjacent cells position in the direction specified.
      * @throws group16.antgame.ant.InvalidDirectionException
      */
     public Position adjacentCell(Position pos, int direction) throws InvalidDirectionException {
@@ -353,4 +379,33 @@ public class World {
         for(int d = 0; d <=5; d++)
             checkForSurroundedAntAt(adjacentCell(p,d));
     }
+    
+    @Override
+    public String toString()
+    {
+        String StringWorld = "";
+        StringWorld += MAX_X + "\n" + MAX_Y + "\n";
+        for(int y = 0; y < MAX_Y; y++)
+        {
+            if(y%2 != 0)
+                StringWorld += " ";
+            for(int x = 0; x < MAX_X; x++)
+                StringWorld += cells[x][y].toString() + " ";
+            StringWorld += "\n"; 
+        }
+        return StringWorld;
+    }
+    /* testing only
+    public static void main(String[] arg) throws InvalidDirectionException
+    {
+        World world1 = new World();
+        String worldMap = world1.toString();
+        System.out.println(worldMap);
+        World world2 = new World(worldMap);
+        String worldMap2 = world2.toString();
+        System.out.println(worldMap2);
+        System.out.println(worldMap.compareTo(worldMap2));
+    }
+    */
 }
+    
