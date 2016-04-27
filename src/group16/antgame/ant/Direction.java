@@ -3,7 +3,7 @@ package group16.antgame.ant;
 /**
  * The Direction class provides 6 public static final integers that denote the directions that an an can take to an adjacent cell on the board. This class makes it easier to work with the hexagonal directions and prevents InvalidDirectionExcpetions being thrown elsewhere.
  * @author Group 16
- * @version 14/04/2016
+ * @version 24/03/2016
  */
 public class Direction {
     
@@ -44,14 +44,7 @@ public class Direction {
      * @return The new direction the ant would be facing if it turned left or right.
      */
     public static int turn(LinearDirection lr, int direction) {
-        switch (lr) {
-            case Left:
-                return (direction+5) % 6;
-            case Right:
-                return (direction+1) % 6;
-            default:
-                return -1;
-        }
+        throw new UnsupportedOperationException("Implement this!");
     }
     
 }

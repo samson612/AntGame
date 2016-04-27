@@ -1,7 +1,5 @@
 package group16.antgame.ant.instructions;
 
-import group16.antgame.ant.MarkerOutOfBoundsException;
-
 /**
  * The Unmark Instruction allows an ant to unmark the current cell with one of 6 marks (0-5) and move to a state afterward.
  * @author Group 16
@@ -27,6 +25,7 @@ public class Unmark extends Instruction {
      */
     public Unmark(int marker, int st) throws MarkerOutOfBoundsException {
         if(marker < 0 || marker > 5) {
+            throw new MarkerOutOfBoundsException();
         }
         else {
             this.marker = marker;
@@ -42,14 +41,6 @@ public class Unmark extends Instruction {
     public int execute() {
         // Unmark marker in current cell and go to st.
         throw new UnsupportedOperationException("Not supported yet."); //To change body of generated methods, choose Tools | Templates.
-    }
-
-    public int getMarker() {
-        return marker;
-    }
-
-    public int getSt() {
-        return st;
     }
     
 }

@@ -42,18 +42,5 @@ public class Flip extends Instruction {
     public int execute() {
         throw new UnsupportedOperationException("Not supported yet."); //To change body of generated methods, choose Tools | Templates.
     }
-
-    public int getP() {
-        return p;
-    }
-
-    public int getSt1() {
-        return st1;
-    }
-
-    public int getSt2() {
-        return st2;
-    }
-    
     
 }
