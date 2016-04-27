@@ -1,6 +1,10 @@
 package group16.antgame.ant.instructions;
 
+import group16.antgame.ant.Ant;
 import group16.antgame.ant.LinearDirection;
+import group16.antgame.world.Cell;
+import group16.antgame.world.Position;
+import group16.antgame.world.World;
 
 /**
  * The Turn Instruction allows an ant to turn left or right and move to a new state.
@@ -35,8 +39,14 @@ public class Turn extends Instruction {
      * @return The next state to be executed.
      */
     @Override
-    public int execute() {
-        throw new UnsupportedOperationException("Not supported yet."); //To change body of generated methods, choose Tools | Templates.
+    public int execute(World w, Position p, Cell c, Ant a) {
+        switch(dir) {
+            case Left: a.setDirection((a.getDirection() - 1) % 6);
+                break;
+            case Right: a.setDirection((a.getDirection() + 1) % 6);
+                break;
+        }
+        return st;
     }
 
     public LinearDirection getDir() {

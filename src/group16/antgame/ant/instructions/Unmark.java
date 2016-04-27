@@ -1,6 +1,10 @@
 package group16.antgame.ant.instructions;
 
+import group16.antgame.ant.Ant;
 import group16.antgame.ant.MarkerOutOfBoundsException;
+import group16.antgame.world.Cell;
+import group16.antgame.world.Position;
+import group16.antgame.world.World;
 
 /**
  * The Unmark Instruction allows an ant to unmark the current cell with one of 6 marks (0-5) and move to a state afterward.
@@ -39,9 +43,11 @@ public class Unmark extends Instruction {
      * @return The integer of the next state (or instruction) to be executed.
      */
     @Override
-    public int execute() {
-        // Unmark marker in current cell and go to st.
-        throw new UnsupportedOperationException("Not supported yet."); //To change body of generated methods, choose Tools | Templates.
+    public int execute(World w, Position p, Cell c, Ant a) {
+        if(c.check_marker(a.getColour(), marker)) {
+            c.clear_marker(a.getColour(), marker);
+        }
+        return st;
     }
 
     public int getMarker() {

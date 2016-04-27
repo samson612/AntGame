@@ -6,5 +6,12 @@ package group16.antgame.ant;
  * @version 24/03/2016
  */
 public enum Colour {
-    Red, Black
+    Red, Black;
+    public static Colour oppositeColour(Colour c) {
+        switch(c) {
+            case Red: return Black;
+            case Black: return Red;
+        }
+        return null;
+    }
 }

@@ -1,6 +1,9 @@
 package group16.antgame.ant;
 
 import group16.antgame.ant.instructions.Instruction;
+import group16.antgame.world.Cell;
+import group16.antgame.world.Position;
+import group16.antgame.world.World;
 
 /**
  * The Ant class holds all information about a separate ant in the game, including its "brain".
@@ -142,9 +145,9 @@ public class Ant {
         this.hasFood = hasFood;
     }
     
-    public void action() {
+    public void step(World w, Position p, Cell c) {
         if(resting == 0) {
-            currentState = brain.getStates().get(currentState).execute();
+            currentState = brain.getStates().get(currentState).execute(w, p, c, this);
         }
     }
 }
