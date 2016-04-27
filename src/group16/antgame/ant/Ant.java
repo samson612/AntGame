@@ -1,6 +1,9 @@
 package group16.antgame.ant;
 
 import group16.antgame.ant.instructions.Instruction;
+import group16.antgame.world.Cell;
+import group16.antgame.world.Position;
+import group16.antgame.world.World;
 
 /**
  * The Ant class holds all information about a separate ant in the game, including its "brain".
@@ -31,12 +34,6 @@ public class Ant {
     private int currentState;
     
     /**
-     * The set of Instructions that this ant uses to make decisions.
-     * @see Instruction
-     */
-    private Instruction[] states;
-    
-    /**
      * The resting component that keeps track of how long an ant has to rest after its last move before any other action.
      */
     private int resting;
@@ -45,6 +42,8 @@ public class Ant {
      * The current direction that the ant is facing in.
      */
     private int direction;
+    
+    private AntBrain brain;
     
     /**
      * A boolean indicating whether the ant is currently carrying a food particle.
@@ -55,10 +54,18 @@ public class Ant {
      * Construct a new ant given a "brain", with an automatically assigned id.
      * @param antBrain The finite state machine that acts as the Ant "brain" that determines the actions it takes.
      */
-    public Ant(String antBrain) {
+    public Ant(AntBrain brain, Colour colour) {
         this.id = currId;
-        // Parse Finite State Machine here
+        this.brain = brain;
+        this.currentState = 0;
+        this.colour = colour;
+        this.hasFood = false;
+        this.resting = 0;
         currId++;
+    }
+
+    public int getId() {
+        return id;
     }
     
     /**
@@ -67,6 +74,11 @@ public class Ant {
      */
     public int getState() {
         return currentState;
+    }
+    
+    
+    public Instruction getCurrentInstruction() {
+        return brain.states.get(currentState);
     }
     
     /**

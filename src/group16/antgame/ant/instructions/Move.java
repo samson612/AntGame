@@ -1,5 +1,10 @@
 package group16.antgame.ant.instructions;
 
+import group16.antgame.ant.Ant;
+import group16.antgame.world.Cell;
+import group16.antgame.world.Position;
+import group16.antgame.world.World;
+
 /**
  * The Move Instruction allows the ant to move forward one space in the direction it is facing and then proceeds to a new state.
  * @author Group 16
@@ -32,8 +37,26 @@ public class Move extends Instruction {
      * @return The integer of the next state to be executed.
      */
     @Override
-    public int execute() {
-        throw new UnsupportedOperationException("Not supported yet."); //To change body of generated methods, choose Tools | Templates.
+    public int execute(World w, Position p, Cell c, Ant a) {
+        Cell aheadCell = w.getCellAt(w.adjacentCell(p, a.getDirection()));
+        if(aheadCell.occupiesAnt() || aheadCell.isRocky()) {
+            return st2;
+        }
+        else {
+            // move forward
+            aheadCell.setAnt(a);
+            c.clearAnt();
+            a.setResting(a.getResting() + 14);
+            return st1;
+        }
+    }
+
+    public int getSt1() {
+        return st1;
+    }
+
+    public int getSt2() {
+        return st2;
     }
     
 }

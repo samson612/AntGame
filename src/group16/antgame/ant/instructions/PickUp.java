@@ -1,5 +1,10 @@
 package group16.antgame.ant.instructions;
 
+import group16.antgame.ant.Ant;
+import group16.antgame.world.Cell;
+import group16.antgame.world.Position;
+import group16.antgame.world.World;
+
 /**
  * The PickUp Instruction allows an ant to pick up food from the current cell and move to a state. If there is no food in that cell then it moves to another state.
  * @author Group 16
@@ -32,10 +37,23 @@ public class PickUp extends Instruction {
      * @return The integer of the next state to be executed.
      */
     @Override
-    public int execute() {
-        // Pick up food from current cell and go to st1;
-        // go to st2 if there is no food in the current cell.
-        throw new UnsupportedOperationException("Not supported yet."); //To change body of generated methods, choose Tools | Templates.
+    public int execute(World w, Position p, Cell c, Ant a) {
+        if(c.getNumOfFood() > 0) {
+            a.setHasFood(true);
+            c.setFood(c.getNumOfFood() - 1);
+            return st1;
+        }
+        else {
+            return st2;
+        }
+    }
+
+    public int getSt1() {
+        return st1;
+    }
+
+    public int getSt2() {
+        return st2;
     }
     
 }

@@ -5,7 +5,7 @@ package group16.antgame.ant;
  * @author Group 16
  * @version 24/03/2016
  */
-public class InvalidDirectionException extends Exception {
+public class InvalidDirectionException extends RuntimeException {
     
     /**
      * The constructor creates a new InvalidDirectionException with a predetermined message.

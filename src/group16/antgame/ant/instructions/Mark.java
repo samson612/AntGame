@@ -1,5 +1,10 @@
 package group16.antgame.ant.instructions;
 
+import group16.antgame.ant.Ant;
+import group16.antgame.world.Cell;
+import group16.antgame.world.Position;
+import group16.antgame.world.World;
+
 /**
  * The Mark Instruction allows an ant to mark a current cell with one of 6 marks (0-5) and move to a state afterward.
  * @author Group 16
@@ -23,9 +28,8 @@ public class Mark extends Instruction {
      * @param st The state to move to after execution of this instruction.
      * @throws MarkerOutOfBoundsException if the marker integer does not fall within the specified marker range (between 0 and 5 inclusive).
      */
-    public Mark(int marker, int st) throws MarkerOutOfBoundsException {
+    public Mark(int marker, int st) {
         if(marker < 0 || marker > 5) {
-            throw new MarkerOutOfBoundsException();
         }
         else {
             this.marker = marker;
@@ -38,9 +42,18 @@ public class Mark extends Instruction {
      * @return The integer of the next state (or instruction) to be executed.
      */
     @Override
-    public int execute() {
-        // Set mark marker in current cell and go to st.
-        throw new UnsupportedOperationException("Not supported yet.");
+    public int execute(World w, Position p, Cell c, Ant a) {
+        c.set_marker(a.getColour(), marker);
+        return st;
     }
+
+    public int getMarker() {
+        return marker;
+    }
+
+    public int getSt() {
+        return st;
+    }
+    
     
 }

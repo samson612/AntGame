@@ -1,5 +1,11 @@
 package group16.antgame.ant.instructions;
 
+import group16.antgame.ant.Ant;
+import group16.antgame.world.Cell;
+import group16.antgame.world.Position;
+import group16.antgame.world.World;
+import java.util.Random;
+
 /**
  * The Flip Instruction generates a random number between 0 and a specified boundary. If the number generated is 0 then go to one state, otherwise go to another state.
  * @author Group 16
@@ -10,7 +16,7 @@ public class Flip extends Instruction {
     /**
      * The upper limit from which a random number is generated (a random number between 0 and p inclusive).
      */
-    private int p;
+    private int x;
     
     /**
      * The state to go to if the generated random number = 0.
@@ -24,12 +30,12 @@ public class Flip extends Instruction {
     
     /**
      * Creates a new Flip Instruction and stores the formal parameters ready for execution.
-     * @param p The upper limit from which a random number is generated (a random number between 0 and p inclusive).
+     * @param x The upper limit from which a random number is generated (a random number between 0 and p inclusive).
      * @param st1 The state to go to if the generated random number = 0.
      * @param st2 The state to go to if the generated random number != 0.
      */
-    public Flip(int p, int st1, int st2) {
-        this.p = p;
+    public Flip(int x, int st1, int st2) {
+        this.x = x;
         this.st1 = st1;
         this.st2 = st2;
     }
@@ -39,8 +45,28 @@ public class Flip extends Instruction {
      * @return The integer of the next state to be executed.
      */
     @Override
-    public int execute() {
-        throw new UnsupportedOperationException("Not supported yet."); //To change body of generated methods, choose Tools | Templates.
+    public int execute(World w, Position p, Cell c, Ant a) {
+        Random random = new Random();
+        int randNo = random.nextInt(x);
+        if(randNo == 0) {
+            return st1;
+        }
+        else {
+            return st2;
+        }
     }
+
+    public int getX() {
+        return x;
+    }
+
+    public int getSt1() {
+        return st1;
+    }
+
+    public int getSt2() {
+        return st2;
+    }
+    
     
 }
