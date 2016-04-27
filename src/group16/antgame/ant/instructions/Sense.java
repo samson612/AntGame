@@ -56,23 +56,5 @@ public class Sense extends Instruction {
         // and to st2 otherwise
         throw new UnsupportedOperationException("Not supported yet.");
     }
-
-    public SenseDirection getDir() {
-        return dir;
-    }
-
-    public int getSt1() {
-        return st1;
-    }
-
-    public int getSt2() {
-        return st2;
-    }
-
-    public Condition getCond() {
-        return cond;
-    }
-    
-    
     
 }

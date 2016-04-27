@@ -37,13 +37,5 @@ public class PickUp extends Instruction {
         // go to st2 if there is no food in the current cell.
         throw new UnsupportedOperationException("Not supported yet."); //To change body of generated methods, choose Tools | Templates.
     }
-
-    public int getSt1() {
-        return st1;
-    }
-
-    public int getSt2() {
-        return st2;
-    }
     
 }
