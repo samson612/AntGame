@@ -23,9 +23,8 @@ public class Mark extends Instruction {
      * @param st The state to move to after execution of this instruction.
      * @throws MarkerOutOfBoundsException if the marker integer does not fall within the specified marker range (between 0 and 5 inclusive).
      */
-    public Mark(int marker, int st) throws MarkerOutOfBoundsException {
+    public Mark(int marker, int st) {
         if(marker < 0 || marker > 5) {
-            throw new MarkerOutOfBoundsException();
         }
         else {
             this.marker = marker;
@@ -42,5 +41,14 @@ public class Mark extends Instruction {
         // Set mark marker in current cell and go to st.
         throw new UnsupportedOperationException("Not supported yet.");
     }
+
+    public int getMarker() {
+        return marker;
+    }
+
+    public int getSt() {
+        return st;
+    }
+    
     
 }
