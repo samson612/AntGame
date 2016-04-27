@@ -2,7 +2,10 @@ package group16.antgame.gui;
 
 import group16.antgame.ant.AntBrain;
 import group16.antgame.ant.AntBrainParseException;
+import java.awt.Color;
 import java.awt.Component;
+import java.awt.event.MouseEvent;
+import java.awt.event.MouseListener;
 import java.io.File;
 import java.io.IOException;
 import javax.swing.JLabel;
@@ -47,6 +50,7 @@ public class LandingFrame extends javax.swing.JFrame {
         jLabel2 = new javax.swing.JLabel();
         jScrollPane1 = new javax.swing.JScrollPane();
         jPanel2 = new javax.swing.JPanel();
+        jButton1 = new javax.swing.JButton();
 
         setDefaultCloseOperation(javax.swing.WindowConstants.EXIT_ON_CLOSE);
         setTitle("Ant Game");
@@ -69,11 +73,19 @@ public class LandingFrame extends javax.swing.JFrame {
             }
         });
 
-        jLabel2.setText("<html>Welcome to the Ant Game. To get started, upload your finite state machine ant brain files using the buttons below. You can also choose your own world file, otherwise a random world will be generated.</html>");
+        jLabel2.setText("<html>Welcome to the Ant Game. To get started, upload your finite state machine ant brain files using the buttons below. You can also choose your own world file, otherwise a random world will be generated. Click on any extra players' names to delete them.</html>");
         jLabel2.setToolTipText("");
 
         jPanel2.setLayout(new java.awt.GridLayout(0, 2));
         jScrollPane1.setViewportView(jPanel2);
+
+        jButton1.setText("Remove Player "+numPlayers+"...");
+        jButton1.setEnabled(false);
+        jButton1.addActionListener(new java.awt.event.ActionListener() {
+            public void actionPerformed(java.awt.event.ActionEvent evt) {
+                jButton1ActionPerformed(evt);
+            }
+        });
 
         javax.swing.GroupLayout layout = new javax.swing.GroupLayout(getContentPane());
         getContentPane().setLayout(layout);
@@ -87,6 +99,8 @@ public class LandingFrame extends javax.swing.JFrame {
                     .addComponent(jScrollPane1, javax.swing.GroupLayout.DEFAULT_SIZE, 589, Short.MAX_VALUE)
                     .addGroup(layout.createSequentialGroup()
                         .addComponent(jButton3)
+                        .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED)
+                        .addComponent(jButton1)
                         .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED, javax.swing.GroupLayout.DEFAULT_SIZE, Short.MAX_VALUE)
                         .addComponent(jButton8, javax.swing.GroupLayout.PREFERRED_SIZE, 147, javax.swing.GroupLayout.PREFERRED_SIZE)))
                 .addContainerGap())
@@ -99,11 +113,12 @@ public class LandingFrame extends javax.swing.JFrame {
                 .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED)
                 .addComponent(jLabel2, javax.swing.GroupLayout.PREFERRED_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.PREFERRED_SIZE)
                 .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED)
-                .addComponent(jScrollPane1, javax.swing.GroupLayout.DEFAULT_SIZE, 355, Short.MAX_VALUE)
+                .addComponent(jScrollPane1, javax.swing.GroupLayout.DEFAULT_SIZE, 341, Short.MAX_VALUE)
                 .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED)
                 .addGroup(layout.createParallelGroup(javax.swing.GroupLayout.Alignment.BASELINE)
                     .addComponent(jButton3)
-                    .addComponent(jButton8))
+                    .addComponent(jButton8)
+                    .addComponent(jButton1))
                 .addContainerGap())
         );
 
@@ -119,6 +134,10 @@ public class LandingFrame extends javax.swing.JFrame {
         File[] brainFiles = new File[numPlayers];
         for(int i = 0; i < brainFiles.length; i++) {
             brainFiles[i] = getButton(i + 1).getFile();
+            if(brainFiles[i] == null) {
+                JOptionPane.showMessageDialog(this, "One or more players did not submit an ant brain.", "Error", JOptionPane.ERROR_MESSAGE);
+                return;
+            }
         }
         AntBrain[] brains = new AntBrain[numPlayers];
         for(int i = 0; i < brainFiles.length; i++) {
@@ -131,6 +150,11 @@ public class LandingFrame extends javax.swing.JFrame {
             }
         }
     }//GEN-LAST:event_jButton8ActionPerformed
+
+    private void jButton1ActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_jButton1ActionPerformed
+        // TODO add your handling code here:
+        removeRow();
+    }//GEN-LAST:event_jButton1ActionPerformed
 
     /**
      * @param args the command line arguments
@@ -168,12 +192,33 @@ public class LandingFrame extends javax.swing.JFrame {
         });
     }
     
+    private void removeRow() {
+        if(numPlayers > 2) {
+            JLabel label = getLabel(numPlayers);
+            AntBrainUploadButton abub = getButton(numPlayers);
+            label.setVisible(false);
+            abub.setVisible(false);
+            jPanel2.remove(label);
+            jPanel2.remove(abub);
+            jPanel2.revalidate();
+            numPlayers--;
+            jButton1.setText("Remove Player "+numPlayers+"...");
+        }
+        if(numPlayers <= 2) {
+            jButton1.setEnabled(false);
+        }
+    }
+    
     private void addRow() {
         numPlayers++;
         JLabel label = new JLabel("Player "+numPlayers);
         label.setHorizontalAlignment(JLabel.CENTER);
         jPanel2.add(label);
         jPanel2.add(new AntBrainUploadButton(numPlayers));
+        jButton1.setText("Remove Player "+numPlayers+"...");
+        if(numPlayers > 2) {
+            jButton1.setEnabled(true);
+        }
     }
     
     private AntBrainUploadButton getButton(int playerNumber) {
@@ -187,8 +232,21 @@ public class LandingFrame extends javax.swing.JFrame {
         }
         return null;
     }
+    
+    private JLabel getLabel(int playerNumber) {
+        for(Component c : jPanel2.getComponents()) {
+            if(c instanceof JLabel) {
+                JLabel label = (JLabel) c;
+                if(label.getText().equals("Player "+playerNumber)) {
+                    return label;
+                }
+            }
+        }
+        return null;
+    }
 
     // Variables declaration - do not modify//GEN-BEGIN:variables
+    private javax.swing.JButton jButton1;
     private javax.swing.JButton jButton3;
     private javax.swing.JButton jButton8;
     private javax.swing.JLabel jLabel1;
