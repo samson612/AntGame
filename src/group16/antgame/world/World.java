@@ -1,6 +1,7 @@
 package group16.antgame.world;
 
 import group16.antgame.ant.Ant;
+import group16.antgame.ant.AntBrain;
 import group16.antgame.ant.Colour;
 import group16.antgame.ant.Condition;
 import group16.antgame.ant.Direction;
@@ -30,10 +31,12 @@ public class World {
     private static final int BLOB_F = 5;
     private static final int ROCK = 14;
     /**
-     * Creates a new World given a Finite State Machine passed in by the user. This FSM determines the size of the world and the contents of each cell.
-     * @param world The Finite State Machine that determines the World.
+     * Creates a new World by passing a String which represents the world and 2 Ant Brains.  The String determines the size of the world and the contents of each cell.
+     * @param world The String that represents the World.
+     * @param RedAntBrain Ant Brain for Red colour ant
+     * @param BlackAntBrain Ant Brain for Black colour ant
      */
-    public World(String world)
+    public World(String world,AntBrain RedAntBrain, AntBrain BlackAntBrain)
     {
         String[] cellSpecifiers = world.split("\n");
         MAX_X = Integer.parseInt(cellSpecifiers[0]);
@@ -50,7 +53,23 @@ public class World {
                     cells[x][y-2] = new Cell('.',Character.getNumericValue(cellSpecifiers[y].charAt((x*2) + y%2)));
             }
         }
+        //assign ants to it's own colour Anhill
+        for(int y = 0; y < MAX_Y; y++)
+            for(int x = 0; x < MAX_X; x++)
+            {
+                if(cells[x][y].isAnthill(Colour.Red))
+                    cells[x][y].setAnt(new Ant(RedAntBrain, Colour.Red));
+                else if(cells[x][y].isAnthill(Colour.Black))
+                    cells[x][y].setAnt(new Ant(BlackAntBrain, Colour.Black));
+            }
     }
+    
+    /**
+     * Creates a new World by default parameter with 2 Ant Brains 
+     * @param RedAntBrain Ant Brain for Red colour ant
+     * @param BlackAntBrain Ant Brain for Black colour ant
+     * @throws InvalidDirectionException 
+     */
     public World(AntBrain RedAntBrain, AntBrain BlackAntBrain) throws InvalidDirectionException{
         Random randX = new Random();
         Random randY = new Random(16);
@@ -95,7 +114,7 @@ public class World {
         for(Position p : hexagon(ANTHILL_LENGTH,blackAntHill_x,blackAntHill_y))
             cells[p.getPositionX()][p.getPositionY()] = new Cell('-',0);
         
-        //create 11 blobs of food with 5x5 rectangle
+        //create BLOB_N(11) blobs of food with 5x5 rectangle
         int blob_X;
         int blob_Y;      
         ArrayList<Position> listOfPosition;
@@ -117,7 +136,7 @@ public class World {
                     cells[p.getPositionX()][p.getPositionY()].setFood(BLOB_F);
         }
         
-        //create 14 rocky cells
+        //create ROCK(14) rocky cells
         int rock_X;
         int rock_Y;
         Position rockP;
@@ -140,8 +159,7 @@ public class World {
             cells[rock_X][rock_Y] = new Cell('#',0);
         }
         
-        //assign ants to it's Anhill
-        
+        //assign ants to it's own colour Anhill
         for(int y = 0; y < MAX_Y; y++)
             for(int x = 0; x < MAX_X; x++)
             {
@@ -152,8 +170,13 @@ public class World {
             }
             
     }
-    
-    //Find the area of a hexagon with
+    /**
+     * Find the area of a hexagon with a given side length
+     * @param sideLength
+     * @param CenterX x-cood of Center 
+     * @param CenterY y-cood of Center
+     * @return ArrayList<Position> which represent all position of that hexagon 
+     */
     private ArrayList<Position> hexagon(int sideLength, int CenterX, int CenterY)
     {
         ArrayList<Position> listOfPosition = new ArrayList<>();
@@ -208,7 +231,7 @@ public class World {
             if(a.getResting() > 0)
                 a.setResting(a.getResting() - 1);
             else
-                a.getCurrentInstruction.execute(this,p,getCellAt(p), a);
+                a.getCurrentInstruction().execute(this,p,getCellAt(p), a);
         }
     }
     
@@ -248,7 +271,7 @@ public class World {
                 default: throw new RuntimeException("Undefined condition");
             }
     }
-        /**
+    /**
      * Returns the adjacent cell in the specified direction.
      * @param pos The position to get the adjacent cell from.
      * @param direction The direction to get the adjacent cell from.
@@ -379,7 +402,10 @@ public class World {
         for(int d = 0; d <=5; d++)
             checkForSurroundedAntAt(adjacentCell(p,d));
     }
-    
+    /**
+     * Override the toString method to store the cell in the world as String
+     * @return String StringWorld Present the world as String
+     */
     @Override
     public String toString()
     {
