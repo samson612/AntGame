@@ -22,14 +22,14 @@ public class World {
      * The cells 2 dimensional array holds all of the cells of the World.
      */
     private Cell[][] cells;
-    private static int MAX_X = 150;
-    private static int MAX_Y = 150;
-    private static final int ANTHILL_LENGTH = 7;
-    private static final int BLOB_N = 11;
-    private static final int BLOB_X = 5;
-    private static final int BLOB_Y = 5;
-    private static final int BLOB_F = 5;
-    private static final int ROCK = 14;
+    private int MAX_X;
+    private int MAX_Y;
+    private int BLOB_N;
+    private int BLOB_X;
+    private int BLOB_Y;
+    private int BLOB_F;
+    private int ROCK;
+    private int ANTHILL_LENGTH;
     /**
      * Creates a new World by passing a String which represents the world and 2 Ant Brains.  The String determines the size of the world and the contents of each cell.
      * @param world The String that represents the World.
@@ -39,64 +39,79 @@ public class World {
     public World(String world,AntBrain RedAntBrain, AntBrain BlackAntBrain)
     {
         String[] cellSpecifiers = world.split("\n");
-        MAX_X = Integer.parseInt(cellSpecifiers[0]);
-        MAX_Y = Integer.parseInt(cellSpecifiers[1]);
-        cells = new Cell[MAX_X][MAX_Y];
+        this.MAX_X = Integer.parseInt(cellSpecifiers[0]);
+        this.MAX_Y = Integer.parseInt(cellSpecifiers[1]);
+        this.cells = new Cell[MAX_X][MAX_Y];
         
         for(int y = 2; y < MAX_Y + 2; y++)
         {
             for(int x = 0; x < MAX_X; x++)
             {
                 if(Character.getNumericValue(cellSpecifiers[y].charAt((x*2) + y%2)) == -1)
-                    cells[x][y-2] = new Cell(cellSpecifiers[y].charAt((x*2) + y%2),0);
+                    this.cells[x][y-2] = new Cell(cellSpecifiers[y].charAt((x*2) + y%2),0);
                 else
-                    cells[x][y-2] = new Cell('.',Character.getNumericValue(cellSpecifiers[y].charAt((x*2) + y%2)));
+                    this.cells[x][y-2] = new Cell('.',Character.getNumericValue(cellSpecifiers[y].charAt((x*2) + y%2)));
             }
         }
         //assign ants to it's own colour Anhill
         for(int y = 0; y < MAX_Y; y++)
             for(int x = 0; x < MAX_X; x++)
             {
-                if(cells[x][y].isAnthill(Colour.Red))
-                    cells[x][y].setAnt(new Ant(RedAntBrain, Colour.Red));
-                else if(cells[x][y].isAnthill(Colour.Black))
-                    cells[x][y].setAnt(new Ant(BlackAntBrain, Colour.Black));
+                if(this.cells[x][y].isAnthill(Colour.Red))
+                    this.cells[x][y].setAnt(new Ant(RedAntBrain, Colour.Red));
+                else if(this.cells[x][y].isAnthill(Colour.Black))
+                    this.cells[x][y].setAnt(new Ant(BlackAntBrain, Colour.Black));
             }
     }
     
     /**
-     * Creates a new World by default parameter with 2 Ant Brains 
-     * @param RedAntBrain Ant Brain for Red colour ant
-     * @param BlackAntBrain Ant Brain for Black colour ant
+     * Creates a new World using inputting parameter 
+     * @param max_x
+     * @param max_y
+     * @param blob_n
+     * @param blob_x
+     * @param blob_y
+     * @param blob_f
+     * @param rock
+     * @param anthill_length
+     * @param RandomSeed
      * @throws InvalidDirectionException 
      */
-    public World(AntBrain RedAntBrain, AntBrain BlackAntBrain) throws InvalidDirectionException{
+    public World(int max_x,int max_y, int blob_n, int blob_x,int blob_y, int blob_f, int rock, int anthill_length,int RandomSeed) throws InvalidDirectionException{
         Random randX = new Random();
-        Random randY = new Random(16);
-        cells = new Cell[MAX_X][MAX_Y];
+        Random randY = new Random(RandomSeed);
+        this.MAX_X = max_x;
+        this.MAX_Y = max_y;
+        this.BLOB_N = blob_n;
+        this.BLOB_X = blob_x;
+        this.BLOB_Y = blob_y;
+        this.BLOB_F = blob_f;
+        this.ROCK = rock;
+        this.ANTHILL_LENGTH = anthill_length;
+        this.cells = new Cell[MAX_X][MAX_Y];
         
         //create Rocky cells on world's perimeter
         for(int i = 0; i < MAX_X; i++)
         {
-            cells[i][0] = new Cell('#',0);
-            cells[i][MAX_Y-1] = new Cell('#',0);
+            this.cells[i][0] = new Cell('#',0);
+            this.cells[i][MAX_Y-1] = new Cell('#',0);
         }
         for(int i = 0; i < MAX_Y; i++)
         {
-            cells[0][i] = new Cell('#',0);
-            cells[MAX_X-1][i] = new Cell('#',0);
+            this.cells[0][i] = new Cell('#',0);
+            this.cells[MAX_X-1][i] = new Cell('#',0);
         }
         
         //create clear cells in the world
         for(int i = 1; i < MAX_X-1; i++)
             for(int j = 1; j < MAX_Y-1; j++)
-                cells[i][j] = new Cell('.',0);
+                this.cells[i][j] = new Cell('.',0);
         
         //create  Red Anthill cells (hexagons with sides of length 7)
         int redAntHill_x = randX.nextInt(MAX_X - (ANTHILL_LENGTH + 1) * 2) + ANTHILL_LENGTH + 1;
         int redAntHill_y = randY.nextInt(MAX_Y - (ANTHILL_LENGTH + 1) * 2) + ANTHILL_LENGTH + 1;
         for(Position p : hexagon(ANTHILL_LENGTH,redAntHill_x,redAntHill_y))
-            cells[p.getPositionX()][p.getPositionY()] = new Cell('+',0); 
+            this.cells[p.getPositionX()][p.getPositionY()] = new Cell('+',0); 
         
         //create  Black Anthill cells (hexagons with sides of length 7)
         boolean overlap;
@@ -112,7 +127,7 @@ public class World {
                             overlap = true;
         } while (overlap);
         for(Position p : hexagon(ANTHILL_LENGTH,blackAntHill_x,blackAntHill_y))
-            cells[p.getPositionX()][p.getPositionY()] = new Cell('-',0);
+            this.cells[p.getPositionX()][p.getPositionY()] = new Cell('-',0);
         
         //create BLOB_N(11) blobs of food with 5x5 rectangle
         int blob_X;
@@ -133,7 +148,7 @@ public class World {
                         overlap = true;
                 }while(overlap);
                 for(Position p : listOfPosition)
-                    cells[p.getPositionX()][p.getPositionY()].setFood(BLOB_F);
+                    this.cells[p.getPositionX()][p.getPositionY()].setFood(BLOB_F);
         }
         
         //create ROCK(14) rocky cells
@@ -141,7 +156,7 @@ public class World {
         int rock_Y;
         Position rockP;
         Cell[] AdCell;
-        for(int rock = 0; rock < ROCK; rock++)
+        for(int r = 0; r < ROCK; r++)
         {
             do{
                 overlap = false;
@@ -156,19 +171,8 @@ public class World {
                     if(AdCell[i].isRocky() || AdCell[i].isAnthill(Colour.Red) || AdCell[i].isAnthill(Colour.Black) || AdCell[i].getNumOfFood() > 0)
                         overlap = true;
             }while(overlap);
-            cells[rock_X][rock_Y] = new Cell('#',0);
-        }
-        
-        //assign ants to it's own colour Anhill
-        for(int y = 0; y < MAX_Y; y++)
-            for(int x = 0; x < MAX_X; x++)
-            {
-                if(cells[x][y].isAnthill(Colour.Red))
-                    cells[x][y].setAnt(new Ant(RedAntBrain, Colour.Red));
-                else if(cells[x][y].isAnthill(Colour.Black))
-                    cells[x][y].setAnt(new Ant(BlackAntBrain, Colour.Black));
-            }
-            
+            this.cells[rock_X][rock_Y] = new Cell('#',0);
+        }           
     }
     /**
      * Find the area of a hexagon with a given side length
@@ -410,14 +414,14 @@ public class World {
     public String toString()
     {
         String StringWorld = "";
-        StringWorld += MAX_X + "\n" + MAX_Y + "\n";
+        StringWorld += MAX_X + "\r\n" + MAX_Y + "\r\n";
         for(int y = 0; y < MAX_Y; y++)
         {
             if(y%2 != 0)
                 StringWorld += " ";
             for(int x = 0; x < MAX_X; x++)
                 StringWorld += cells[x][y].toString() + " ";
-            StringWorld += "\n"; 
+            StringWorld += "\r\n"; 
         }
         return StringWorld;
     }

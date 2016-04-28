@@ -191,4 +191,12 @@ public class Cell {
         }
             return false;
     }
+    @Override
+     public String toString()
+     {
+        if(!(isAnthill(Colour.Red)||isAnthill(Colour.Black))&&this.numOfFood > 0)
+            return "" + this.numOfFood;
+        return "" + specifier;
+     }
+
 }
