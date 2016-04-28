@@ -94,14 +94,14 @@ public class CreateWorldFrame extends javax.swing.JFrame {
             }
         });
 
-        jLabel1.setText("Size of X-asis");
+        jLabel1.setText("Size of X-axis");
 
-        jLabel2.setText("Size of Y-asis");
+        jLabel2.setText("Size of Y-axis");
 
         jLabel3.setText("Number of food blob");
 
         jSlider1.setMaximum(300);
-        jSlider1.setMinimum(50);
+        jSlider1.setMinimum(100);
         jSlider1.setValue(150);
         jSlider1.addChangeListener(new javax.swing.event.ChangeListener() {
             public void stateChanged(javax.swing.event.ChangeEvent evt) {
@@ -110,7 +110,7 @@ public class CreateWorldFrame extends javax.swing.JFrame {
         });
 
         jSlider2.setMaximum(300);
-        jSlider2.setMinimum(50);
+        jSlider2.setMinimum(100);
         jSlider2.setValue(150);
         jSlider2.addChangeListener(new javax.swing.event.ChangeListener() {
             public void stateChanged(javax.swing.event.ChangeEvent evt) {
@@ -129,7 +129,7 @@ public class CreateWorldFrame extends javax.swing.JFrame {
 
         jLabel4.setText("Length of food blob");
 
-        jSlider4.setMaximum(10);
+        jSlider4.setMaximum(7);
         jSlider4.setMinimum(1);
         jSlider4.setValue(5);
         jSlider4.addChangeListener(new javax.swing.event.ChangeListener() {
@@ -140,7 +140,7 @@ public class CreateWorldFrame extends javax.swing.JFrame {
 
         jLabel5.setText("Width of food blob");
 
-        jSlider5.setMaximum(10);
+        jSlider5.setMaximum(7);
         jSlider5.setMinimum(1);
         jSlider5.setValue(5);
         jSlider5.addChangeListener(new javax.swing.event.ChangeListener() {
@@ -180,14 +180,14 @@ public class CreateWorldFrame extends javax.swing.JFrame {
             }
         });
 
-        jSpinner1.setModel(new javax.swing.SpinnerNumberModel(150, 50, 300, 5));
+        jSpinner1.setModel(new javax.swing.SpinnerNumberModel(150, 100, 300, 5));
         jSpinner1.addChangeListener(new javax.swing.event.ChangeListener() {
             public void stateChanged(javax.swing.event.ChangeEvent evt) {
                 jSpinner1StateChanged(evt);
             }
         });
 
-        jSpinner2.setModel(new javax.swing.SpinnerNumberModel(150, 50, 300, 5));
+        jSpinner2.setModel(new javax.swing.SpinnerNumberModel(150, 100, 300, 5));
         jSpinner2.addChangeListener(new javax.swing.event.ChangeListener() {
             public void stateChanged(javax.swing.event.ChangeEvent evt) {
                 jSpinner2StateChanged(evt);
@@ -201,14 +201,14 @@ public class CreateWorldFrame extends javax.swing.JFrame {
             }
         });
 
-        jSpinner4.setModel(new javax.swing.SpinnerNumberModel(5, 1, 10, 1));
+        jSpinner4.setModel(new javax.swing.SpinnerNumberModel(5, 1, 7, 1));
         jSpinner4.addChangeListener(new javax.swing.event.ChangeListener() {
             public void stateChanged(javax.swing.event.ChangeEvent evt) {
                 jSpinner4StateChanged(evt);
             }
         });
 
-        jSpinner5.setModel(new javax.swing.SpinnerNumberModel(5, 1, 10, 1));
+        jSpinner5.setModel(new javax.swing.SpinnerNumberModel(5, 1, 7, 1));
         jSpinner5.addChangeListener(new javax.swing.event.ChangeListener() {
             public void stateChanged(javax.swing.event.ChangeEvent evt) {
                 jSpinner5StateChanged(evt);
@@ -637,8 +637,8 @@ public class CreateWorldFrame extends javax.swing.JFrame {
             {
                 try {
                     date = new Date();
-                    out = new PrintWriter(dateFormat.format(date) + "_" + i + ".world");
                     newWorld = new World(Size_X,Size_Y,blob_n,blob_x,blob_y,blob_f,rock,length,seed);
+                    out = new PrintWriter(dateFormat.format(date) + "_" + i + ".world");
                     out.print(newWorld);
                     out.close();
                 } catch (FileNotFoundException ex) {
@@ -652,7 +652,7 @@ public class CreateWorldFrame extends javax.swing.JFrame {
         @Override
         public void done(){
             int mType=JOptionPane.INFORMATION_MESSAGE;
-            int result = JOptionPane.showConfirmDialog(this.f,"Create more world?",jSlider9.getValue() + " World(s) Created",JOptionPane.YES_NO_OPTION,mType);
+            int result = JOptionPane.showConfirmDialog(this.f,"Create more world?",jProgressBar1.getValue() + " World(s) Created",JOptionPane.YES_NO_OPTION,mType);
             jProgressBar1.setValue(0);
             jTextField1.setEditable(true);
             jButton1.setEnabled(true);

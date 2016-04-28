@@ -129,7 +129,7 @@ public class World {
         for(Position p : hexagon(ANTHILL_LENGTH,blackAntHill_x,blackAntHill_y))
             this.cells[p.getPositionX()][p.getPositionY()] = new Cell('-',0);
         
-        //create BLOB_N(11) blobs of food with 5x5 rectangle
+        //create BLOB_N(11) blobs of food with BLOB_X x BLOB_Y(5x5) rectangle
         int blob_X;
         int blob_Y;      
         ArrayList<Position> listOfPosition;
@@ -137,18 +137,35 @@ public class World {
         {
             do{
                 overlap = false;      
-                listOfPosition = new ArrayList<>();
                 blob_X = randX.nextInt(MAX_X - BLOB_X - 3) + 2;
                 blob_Y = randY.nextInt(MAX_Y - BLOB_Y - 3) + 2;
-                for(int x = 0; x < BLOB_X; x++)
-                    for(int y = 0; y < BLOB_Y; y++)
-                        listOfPosition.add(new Position(blob_X + x, blob_Y + y));
+                listOfPosition = new ArrayList<>();
+                for(int x = 0; x < BLOB_X + 2; x++)
+                {
+                    listOfPosition.add(new Position(blob_X - 1 + x, blob_Y - 1 ));
+                    listOfPosition.add(new Position(blob_X - 1 + x, blob_Y + BLOB_Y ));
+                }
+                for(int y = 0; y < BLOB_Y; y++)
+                {
+                    listOfPosition.add(new Position(blob_X - 1, blob_Y + y));
+                    listOfPosition.add(new Position(blob_X + BLOB_X, blob_Y + y));
+                }
                 for(Position p : listOfPosition)
-                    if(getCellAt(p).isAnthill(Colour.Black) || getCellAt(p).isAnthill(Colour.Red) || getCellAt(p).getNumOfFood() > 0)
+                    if(getCellAt(p).isAnthill(Colour.Black) || getCellAt(p).isAnthill(Colour.Red))
                         overlap = true;
-                }while(overlap);
-                for(Position p : listOfPosition)
-                    this.cells[p.getPositionX()][p.getPositionY()].setFood(BLOB_F);
+                if(!overlap)
+                {
+                    listOfPosition = new ArrayList<>();
+                    for(int x = 0; x < BLOB_X; x++)
+                        for(int y = 0; y < BLOB_Y; y++)
+                            listOfPosition.add(new Position(blob_X + x, blob_Y + y));
+                    for(Position p : listOfPosition)
+                        if(getCellAt(p).isAnthill(Colour.Black) || getCellAt(p).isAnthill(Colour.Red) || getCellAt(p).getNumOfFood() > 0)
+                            overlap = true;
+                }
+            }while(overlap);
+            for(Position p : listOfPosition)
+                this.cells[p.getPositionX()][p.getPositionY()].setFood(BLOB_F);
         }
         
         //create ROCK(14) rocky cells
